@@ -15,37 +15,34 @@
     .farm-section {
       background-color: #fff;
       margin: 20px auto;
-      padding: 30px;
+      padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.2);
-      max-width: 800px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.15);
+      max-width: 900px;
     }
-    .row-section {
+    .tank-container {
       display: flex;
-      justify-content: space-between;
-      margin-top: 10px;
-      padding: 10px 0;
-      border-bottom: 1px solid #ccc;
-    }
-    .row-section:last-child {
-      border-bottom: none;
-    }
-    .content-label {
-      width: 50%;
-    }
-    .content-value {
-      width: 50%;
-      text-align: right;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 20px;
     }
     .tank {
-      height: 150px;
-      width: 50px;
+      height: 180px;
+      width: 60px;
       border: 2px solid #000;
-      margin: 10px auto;
       position: relative;
       background-color: #f1f1f1;
-      border-radius: 5px;
+      border-radius: 10px;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .tank-label {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      text-align: center;
     }
     .liquid {
       position: absolute;
@@ -56,6 +53,17 @@
     .acid-liquid { background-color: green; }
     .chlor-liquid { background-color: blue; }
     .teat-liquid { background-color: red; }
+    .row-section {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px 0;
+      font-size: 0.9rem;
+    }
+    .section-title {
+      margin-top: 25px;
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -68,17 +76,17 @@
       "Brandmar Farm": {
         volumes: { acid: 272.83, chlor: 200, teat: 280 },
         usage: { acid: 0.45 * 17, chlor: 2 * 4, teat: 24 },
-        max: { acid: 300, chlor: 300, teat: 300 }
+        max: { acid: 500, chlor: 300, teat: 1000 }
       },
       "J Block": {
         volumes: { acid: 293.88, chlor: 121.04, teat: 650 },
         usage: { acid: 0.75 * 17, chlor: 2.625 * 4, teat: 50 },
-        max: { acid: 300, chlor: 300, teat: 700 }
+        max: { acid: 500, chlor: 300, teat: 1000 }
       },
       "Pukerimu": {
         volumes: { acid: 272.83, chlor: 79.84, teat: 850 },
         usage: { acid: 0.6 * 10, chlor: 2.1 * 4, teat: 50 },
-        max: { acid: 300, chlor: 300, teat: 900 },
+        max: { acid: 500, chlor: 300, teat: 1000 },
         specialRule: true
       },
       "Ferry View": {
@@ -90,7 +98,6 @@
 
     function calculateTopUpDate(volume, usagePerWeek, specialRule = false) {
       let dailyUsage = usagePerWeek / 7;
-
       if (specialRule) {
         const firstPhaseDays = volume / dailyUsage;
         if (firstPhaseDays <= 60) {
@@ -108,17 +115,17 @@
           return today.toLocaleDateString("en-NZ");
         }
       }
-
       const daysLeft = volume / dailyUsage;
       const today = new Date();
       today.setDate(today.getDate() + Math.floor(daysLeft));
       return today.toLocaleDateString("en-NZ");
     }
 
-    function renderTank(volume, maxVolume, colorClass) {
+    function renderTank(volume, maxVolume, colorClass, label) {
       const percent = Math.min(100, (volume / maxVolume) * 100);
       return `<div class="tank">
-                <div class="liquid ${colorClass}" style="height: ${percent}%;"></div>
+                <div class="liquid ${colorClass}" style="height: ${percent}%"></div>
+                <div class="tank-label">${label}<br><small>${volume.toFixed(1)} L</small></div>
               </div>`;
     }
 
@@ -134,29 +141,15 @@
         section.className = "farm-section";
         section.innerHTML = `
           <h2>${farm}</h2>
-          <h4 class="mt-4">Current Volume</h4>
-          <div class="row-section">
-            <div class="content-label">Acid:</div>
-            <div class="content-value">${data.volumes.acid.toFixed(2)} L</div>
+          <div class="tank-container">
+            ${renderTank(data.volumes.acid, data.max.acid, 'acid-liquid', 'Acid')}
+            ${renderTank(data.volumes.chlor, data.max.chlor, 'chlor-liquid', 'Chlor')}
+            ${renderTank(data.volumes.teat, data.max.teat, 'teat-liquid', 'Teat')}
           </div>
-          ${renderTank(data.volumes.acid, data.max.acid, 'acid-liquid')}
-
-          <div class="row-section">
-            <div class="content-label">Chlor Alkali:</div>
-            <div class="content-value">${data.volumes.chlor.toFixed(2)} L</div>
-          </div>
-          ${renderTank(data.volumes.chlor, data.max.chlor, 'chlor-liquid')}
-
-          <div class="row-section">
-            <div class="content-label">Teat Concentrate:</div>
-            <div class="content-value">${data.volumes.teat.toFixed(2)} L</div>
-          </div>
-          ${renderTank(data.volumes.teat, data.max.teat, 'teat-liquid')}
-
-          <h4 class="mt-4">Estimated Top Up Date</h4>
-          <div class="row-section"><div class="content-label">Acid:</div><div class="content-value">${estAcid}</div></div>
-          <div class="row-section"><div class="content-label">Chlor Alkali:</div><div class="content-value">${estChlor}</div></div>
-          <div class="row-section"><div class="content-label">Teat Concentrate:</div><div class="content-value">${estTeat}</div></div>
+          <div class="section-title">Estimated Top Up Date</div>
+          <div class="row-section"><div>Acid:</div><div>${estAcid}</div></div>
+          <div class="row-section"><div>Chlor Alkali:</div><div>${estChlor}</div></div>
+          <div class="row-section"><div>Teat Concentrate:</div><div>${estTeat}</div></div>
         `;
         container.appendChild(section);
       }
