@@ -210,18 +210,12 @@
       const pdf = new jsPDF('p', 'pt', 'a4');
       const container = document.getElementById("content-wrapper");
 
-      container.style.transform = "scale(2.0)";
-      container.style.transformOrigin = "top left";
-
       const canvas = await html2canvas(container, {
-        scale: 3,
+        scale: 6, // High-res render for PDF
         useCORS: true,
         scrollY: -window.scrollY,
         windowWidth: container.scrollWidth
       });
-
-      container.style.transform = "";
-      container.style.transformOrigin = "";
 
       const imgData = canvas.toDataURL('image/png');
       const pdfWidth = pdf.internal.pageSize.getWidth();
