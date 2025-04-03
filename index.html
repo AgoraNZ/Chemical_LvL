@@ -19,10 +19,14 @@
       border-radius: 10px;
       box-shadow: 0 0 15px rgba(0,0,0,0.2);
       max-width: 800px;
+      text-align: center;
     }
     .farm-section ul {
       list-style: none;
       padding: 0;
+      margin: 0 auto;
+      display: inline-block;
+      text-align: left;
     }
     .farm-section li {
       padding: 6px 0;
@@ -47,6 +51,7 @@
       "Pukerimu": {
         volumes: { acid: 272.83, chlor: 79.84, teat: 850 },
         usage: { acid: 0.6 * 10, chlor: 2.1 * 4, teat: 50 },
+        specialRule: true
       },
       "Ferry View": {
         volumes: { acid: 480, chlor: 220, teat: 900 },
@@ -54,8 +59,28 @@
       },
     };
 
-    function calculateTopUpDate(volume, usagePerWeek) {
-      const dailyUsage = usagePerWeek / 7;
+    function calculateTopUpDate(volume, usagePerWeek, specialRule = false) {
+      let dailyUsage = usagePerWeek / 7;
+
+      if (specialRule) {
+        // Lasts for 60 days then doubles usage
+        const firstPhaseDays = volume / dailyUsage;
+        if (firstPhaseDays <= 60) {
+          const today = new Date();
+          today.setDate(today.getDate() + Math.floor(firstPhaseDays));
+          return today.toLocaleDateString("en-NZ");
+        } else {
+          const first60Vol = dailyUsage * 60;
+          const remainingVol = volume - first60Vol;
+          const doubledUsage = dailyUsage * 2;
+          const secondPhaseDays = remainingVol / doubledUsage;
+          const totalDays = 60 + secondPhaseDays;
+          const today = new Date();
+          today.setDate(today.getDate() + Math.floor(totalDays));
+          return today.toLocaleDateString("en-NZ");
+        }
+      }
+
       const daysLeft = volume / dailyUsage;
       const today = new Date();
       today.setDate(today.getDate() + Math.floor(daysLeft));
@@ -66,9 +91,9 @@
       const container = document.getElementById("dashboard");
       for (let farm in farms) {
         const data = farms[farm];
-        const estAcid = calculateTopUpDate(data.volumes.acid, data.usage.acid);
-        const estChlor = calculateTopUpDate(data.volumes.chlor, data.usage.chlor);
-        const estTeat = calculateTopUpDate(data.volumes.teat, data.usage.teat);
+        const estAcid = calculateTopUpDate(data.volumes.acid, data.usage.acid, data.specialRule);
+        const estChlor = calculateTopUpDate(data.volumes.chlor, data.usage.chlor, data.specialRule);
+        const estTeat = calculateTopUpDate(data.volumes.teat, data.usage.teat, data.specialRule);
 
         const section = document.createElement("div");
         section.className = "farm-section";
