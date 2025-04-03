@@ -15,7 +15,7 @@
     .farm-section {
       background-color: #fff;
       margin: 20px auto;
-      padding: 20px;
+      padding: 10px;
       border-radius: 10px;
       box-shadow: 0 0 15px rgba(0,0,0,0.15);
       max-width: 900px;
@@ -24,7 +24,7 @@
       display: flex;
       justify-content: center;
       gap: 40px;
-      margin-top: 20px;
+      margin-top: 10px;
     }
     .tank-wrapper {
       display: flex;
@@ -32,14 +32,14 @@
       align-items: center;
     }
     .tank-label {
-      margin-bottom: 8px;
-      font-size: 0.95rem;
+      margin-bottom: 4px;
+      font-size: 0.9rem;
       font-weight: bold;
       text-align: center;
     }
     .tank {
-      height: 180px;
-      width: 60px;
+      height: 130px;
+      width: 50px;
       border: 2px solid #000;
       position: relative;
       background-color: #f1f1f1;
@@ -47,8 +47,8 @@
       overflow: hidden;
     }
     .volume-text {
-      margin-top: 5px;
-      font-size: 0.8rem;
+      margin-top: 2px;
+      font-size: 0.75rem;
       text-align: center;
     }
     .liquid {
@@ -63,23 +63,23 @@
     .row-section {
       display: flex;
       justify-content: space-between;
-      padding: 5px 0;
-      font-size: 0.9rem;
+      padding: 2px 0;
+      font-size: 0.85rem;
     }
     .section-title {
-      margin-top: 25px;
-      font-size: 1.1rem;
+      margin-top: 15px;
+      font-size: 1rem;
       font-weight: bold;
     }
     #generate-btn {
       display: block;
-      margin: 40px auto 20px;
-      padding: 10px 25px;
+      margin: 30px auto 10px;
+      padding: 8px 20px;
       background-color: #FFD700;
       color: #000;
       border: none;
       border-radius: 5px;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: bold;
       cursor: pointer;
     }
@@ -187,7 +187,7 @@
     async function generatePDF() {
       const { jsPDF } = window.jspdf;
       const pdf = new jsPDF('p', 'pt', 'a4');
-      const canvas = await html2canvas(document.body, { scale: 2 });
+      const canvas = await html2canvas(document.body, { scale: 2, windowWidth: 1000 });
       const imgData = canvas.toDataURL('image/png');
       const imgProps = pdf.getImageProperties(imgData);
       const pdfWidth = pdf.internal.pageSize.getWidth();
