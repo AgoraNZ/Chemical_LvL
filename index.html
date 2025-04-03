@@ -71,6 +71,21 @@
       font-size: 1.1rem;
       font-weight: bold;
     }
+    #generate-btn {
+      display: block;
+      margin: 40px auto 20px;
+      padding: 10px 25px;
+      background-color: #FFD700;
+      color: #000;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #generate-btn:hover {
+      background-color: #E6C200;
+    }
   </style>
 </head>
 <body>
@@ -78,6 +93,10 @@
 
   <div id="dashboard"></div>
 
+  <button id="generate-btn" onclick="generatePDF()">Generate PDF</button>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script>
     const farms = {
       "Brandmar Farm": {
@@ -163,6 +182,18 @@
         `;
         container.appendChild(section);
       }
+    }
+
+    async function generatePDF() {
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF('p', 'pt', 'a4');
+      const canvas = await html2canvas(document.body, { scale: 2 });
+      const imgData = canvas.toDataURL('image/png');
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save('chemical-volumes-dashboard.pdf');
     }
 
     document.addEventListener("DOMContentLoaded", renderDashboard);
