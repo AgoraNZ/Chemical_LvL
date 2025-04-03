@@ -26,6 +26,17 @@
       gap: 40px;
       margin-top: 20px;
     }
+    .tank-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .tank-label {
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      text-align: center;
+    }
     .tank {
       height: 180px;
       width: 60px;
@@ -34,14 +45,10 @@
       background-color: #f1f1f1;
       border-radius: 10px;
       overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
     }
-    .tank-label {
-      margin-top: 10px;
-      font-size: 0.9rem;
-      font-weight: bold;
+    .volume-text {
+      margin-top: 5px;
+      font-size: 0.8rem;
       text-align: center;
     }
     .liquid {
@@ -123,9 +130,12 @@
 
     function renderTank(volume, maxVolume, colorClass, label) {
       const percent = Math.min(100, (volume / maxVolume) * 100);
-      return `<div class="tank">
-                <div class="liquid ${colorClass}" style="height: ${percent}%"></div>
-                <div class="tank-label">${label}<br><small>${volume.toFixed(1)} L</small></div>
+      return `<div class="tank-wrapper">
+                <div class="tank-label">${label}</div>
+                <div class="tank">
+                  <div class="liquid ${colorClass}" style="height: ${percent}%"></div>
+                </div>
+                <div class="volume-text">${volume.toFixed(1)} L</div>
               </div>`;
     }
 
