@@ -98,6 +98,12 @@
     #generate-btn:hover {
       background-color: #E6C200;
     }
+    .version {
+      text-align: center;
+      font-size: 12px;
+      margin-top: 20px;
+      color: #555;
+    }
     @media print {
       #generate-btn { display: none; }
     }
@@ -108,6 +114,7 @@
     <img id="agora-logo" src="https://firebasestorage.googleapis.com/v0/b/dairy-farm-record-system.appspot.com/o/Agora%20Logo%2F2F6-1YdaEP.jpeg?alt=media" alt="Logo" class="logo">
     <h1>Agora Chemical Volumes Dashboard</h1>
     <div class="dashboard-grid" id="dashboard"></div>
+    <div class="version">Version 1.1</div>
   </div>
 
   <button id="generate-btn" onclick="generatePDF()">Generate PDF</button>
@@ -203,18 +210,12 @@
       const pdf = new jsPDF('p', 'pt', 'a4');
       const container = document.getElementById("content-wrapper");
 
-      container.style.transform = "scale(0.85)";
-      container.style.transformOrigin = "top left";
-
       const canvas = await html2canvas(container, {
-        scale: 2,
+        scale: 3,
         useCORS: true,
         scrollY: -window.scrollY,
         windowWidth: container.scrollWidth
       });
-
-      container.style.transform = "";
-      container.style.transformOrigin = "";
 
       const imgData = canvas.toDataURL('image/png');
       const pdfWidth = pdf.internal.pageSize.getWidth();
