@@ -30,9 +30,6 @@
     .row-section:last-child {
       border-bottom: none;
     }
-    .label {
-      font-weight: bold;
-    }
     .content-label {
       width: 50%;
     }
@@ -40,6 +37,25 @@
       width: 50%;
       text-align: right;
     }
+    .tank {
+      height: 150px;
+      width: 50px;
+      border: 2px solid #000;
+      margin: 10px auto;
+      position: relative;
+      background-color: #f1f1f1;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .liquid {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      transition: height 0.5s ease;
+    }
+    .acid-liquid { background-color: green; }
+    .chlor-liquid { background-color: blue; }
+    .teat-liquid { background-color: red; }
   </style>
 </head>
 <body>
@@ -52,19 +68,23 @@
       "Brandmar Farm": {
         volumes: { acid: 272.83, chlor: 200, teat: 280 },
         usage: { acid: 0.45 * 17, chlor: 2 * 4, teat: 24 },
+        max: { acid: 300, chlor: 300, teat: 300 }
       },
       "J Block": {
         volumes: { acid: 293.88, chlor: 121.04, teat: 650 },
         usage: { acid: 0.75 * 17, chlor: 2.625 * 4, teat: 50 },
+        max: { acid: 300, chlor: 300, teat: 700 }
       },
       "Pukerimu": {
         volumes: { acid: 272.83, chlor: 79.84, teat: 850 },
         usage: { acid: 0.6 * 10, chlor: 2.1 * 4, teat: 50 },
+        max: { acid: 300, chlor: 300, teat: 900 },
         specialRule: true
       },
       "Ferry View": {
         volumes: { acid: 480, chlor: 220, teat: 900 },
         usage: { acid: 0.8 * 17, chlor: 2.8 * 4, teat: 100 },
+        max: { acid: 500, chlor: 300, teat: 1000 }
       },
     };
 
@@ -95,6 +115,13 @@
       return today.toLocaleDateString("en-NZ");
     }
 
+    function renderTank(volume, maxVolume, colorClass) {
+      const percent = Math.min(100, (volume / maxVolume) * 100);
+      return `<div class="tank">
+                <div class="liquid ${colorClass}" style="height: ${percent}%;"></div>
+              </div>`;
+    }
+
     function renderDashboard() {
       const container = document.getElementById("dashboard");
       for (let farm in farms) {
@@ -108,9 +135,23 @@
         section.innerHTML = `
           <h2>${farm}</h2>
           <h4 class="mt-4">Current Volume</h4>
-          <div class="row-section"><div class="content-label">Acid:</div><div class="content-value">${data.volumes.acid.toFixed(2)} L</div></div>
-          <div class="row-section"><div class="content-label">Chlor Alkali:</div><div class="content-value">${data.volumes.chlor.toFixed(2)} L</div></div>
-          <div class="row-section"><div class="content-label">Teat Concentrate:</div><div class="content-value">${data.volumes.teat.toFixed(2)} L</div></div>
+          <div class="row-section">
+            <div class="content-label">Acid:</div>
+            <div class="content-value">${data.volumes.acid.toFixed(2)} L</div>
+          </div>
+          ${renderTank(data.volumes.acid, data.max.acid, 'acid-liquid')}
+
+          <div class="row-section">
+            <div class="content-label">Chlor Alkali:</div>
+            <div class="content-value">${data.volumes.chlor.toFixed(2)} L</div>
+          </div>
+          ${renderTank(data.volumes.chlor, data.max.chlor, 'chlor-liquid')}
+
+          <div class="row-section">
+            <div class="content-label">Teat Concentrate:</div>
+            <div class="content-value">${data.volumes.teat.toFixed(2)} L</div>
+          </div>
+          ${renderTank(data.volumes.teat, data.max.teat, 'teat-liquid')}
 
           <h4 class="mt-4">Estimated Top Up Date</h4>
           <div class="row-section"><div class="content-label">Acid:</div><div class="content-value">${estAcid}</div></div>
