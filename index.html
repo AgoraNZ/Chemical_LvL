@@ -114,7 +114,7 @@
     <img id="agora-logo" src="https://firebasestorage.googleapis.com/v0/b/dairy-farm-record-system.appspot.com/o/Agora%20Logo%2F2F6-1YdaEP.jpeg?alt=media" alt="Logo" class="logo">
     <h1>Agora Chemical Volumes Dashboard</h1>
     <div class="dashboard-grid" id="dashboard"></div>
-    <div class="version">Version 1.1</div>
+    <div class="version">Version 1.2</div>
   </div>
 
   <button id="generate-btn" onclick="generatePDF()">Generate PDF</button>
@@ -210,12 +210,18 @@
       const pdf = new jsPDF('p', 'pt', 'a4');
       const container = document.getElementById("content-wrapper");
 
+      container.style.transform = "scale(2.0)";
+      container.style.transformOrigin = "top left";
+
       const canvas = await html2canvas(container, {
         scale: 3,
         useCORS: true,
         scrollY: -window.scrollY,
         windowWidth: container.scrollWidth
       });
+
+      container.style.transform = "";
+      container.style.transformOrigin = "";
 
       const imgData = canvas.toDataURL('image/png');
       const pdfWidth = pdf.internal.pageSize.getWidth();
