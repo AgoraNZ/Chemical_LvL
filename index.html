@@ -99,7 +99,7 @@
 </head>
 <body>
   <div id="content-wrapper">
-    <img src="https://firebasestorage.googleapis.com/v0/b/dairy-farm-record-system.appspot.com/o/Agora%20Logo%2F2F6-1YdaEP.jpeg?alt=media" alt="Logo" class="logo">
+    <img id="agora-logo" src="https://firebasestorage.googleapis.com/v0/b/dairy-farm-record-system.appspot.com/o/Agora%20Logo%2F2F6-1YdaEP.jpeg?alt=media" alt="Logo" class="logo">
     <h1>Agora Chemical Volumes Dashboard</h1>
     <div id="dashboard"></div>
   </div>
@@ -207,7 +207,8 @@
       });
       const imgData = canvas.toDataURL('image/png');
       const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      const ratio = canvas.width / canvas.height;
+      const pdfHeight = pdfWidth / ratio;
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
       pdf.save('chemical-volumes-dashboard.pdf');
     }
