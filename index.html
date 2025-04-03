@@ -10,8 +10,6 @@
       background-color: #d2d7dd;
       padding: 10px;
       font-family: Arial, sans-serif;
-      transform: scale(0.9);
-      transform-origin: top left;
     }
     h1, h2, h3, h4 { text-align: center; margin-bottom: 10px; }
     .logo {
@@ -21,8 +19,8 @@
     }
     .farm-section {
       background-color: #fff;
-      margin: 5px auto;
-      padding: 6px;
+      margin: 10px auto;
+      padding: 10px;
       border-radius: 8px;
       box-shadow: 0 0 5px rgba(0,0,0,0.1);
       max-width: 600px;
@@ -31,7 +29,7 @@
     .tank-container {
       display: flex;
       justify-content: center;
-      gap: 12px;
+      gap: 20px;
       margin-top: 5px;
     }
     .tank-wrapper {
@@ -40,14 +38,14 @@
       align-items: center;
     }
     .tank-label {
-      margin-bottom: 1px;
-      font-size: 0.7rem;
+      margin-bottom: 4px;
+      font-size: 0.85rem;
       font-weight: bold;
       text-align: center;
     }
     .tank {
-      height: 80px;
-      width: 20px;
+      height: 100px;
+      width: 30px;
       border: 1px solid #000;
       position: relative;
       background-color: #f1f1f1;
@@ -55,8 +53,8 @@
       overflow: hidden;
     }
     .volume-text {
-      margin-top: 1px;
-      font-size: 0.6rem;
+      margin-top: 4px;
+      font-size: 0.75rem;
       text-align: center;
     }
     .liquid {
@@ -71,23 +69,23 @@
     .row-section {
       display: flex;
       justify-content: space-between;
-      padding: 1px 0;
-      font-size: 0.65rem;
+      padding: 2px 0;
+      font-size: 0.8rem;
     }
     .section-title {
-      margin-top: 8px;
-      font-size: 0.75rem;
+      margin-top: 10px;
+      font-size: 0.9rem;
       font-weight: bold;
     }
     #generate-btn {
       display: block;
-      margin: 12px auto;
-      padding: 5px 12px;
+      margin: 20px auto;
+      padding: 6px 16px;
       background-color: #FFD700;
       color: #000;
       border: none;
       border-radius: 5px;
-      font-size: 12px;
+      font-size: 14px;
       font-weight: bold;
       cursor: pointer;
     }
@@ -198,16 +196,25 @@
       const { jsPDF } = window.jspdf;
       const pdf = new jsPDF('p', 'pt', 'a4');
       const container = document.getElementById("content-wrapper");
+
+      container.style.transform = "scale(0.85)";
+      container.style.transformOrigin = "top left";
+
       const canvas = await html2canvas(container, {
         scale: 2,
         useCORS: true,
         scrollY: -window.scrollY,
-        windowWidth: 800
+        windowWidth: container.scrollWidth
       });
+
+      container.style.transform = "";
+      container.style.transformOrigin = "";
+
       const imgData = canvas.toDataURL('image/png');
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const ratio = canvas.width / canvas.height;
       const pdfHeight = pdfWidth / ratio;
+
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
       pdf.save('chemical-volumes-dashboard.pdf');
     }
