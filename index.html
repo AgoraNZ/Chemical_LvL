@@ -17,19 +17,25 @@
       margin: 0 auto 10px;
       width: 180px;
     }
+    .dashboard-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      gap: 10px;
+    }
     .farm-section {
       background-color: #fff;
-      margin: 10px auto;
       padding: 10px;
       border-radius: 8px;
       box-shadow: 0 0 5px rgba(0,0,0,0.1);
-      max-width: 600px;
-      page-break-inside: avoid;
+      width: 45%;
+      min-width: 280px;
+      box-sizing: border-box;
     }
     .tank-container {
       display: flex;
       justify-content: center;
-      gap: 20px;
+      gap: 15px;
       margin-top: 5px;
     }
     .tank-wrapper {
@@ -101,7 +107,7 @@
   <div id="content-wrapper">
     <img id="agora-logo" src="https://firebasestorage.googleapis.com/v0/b/dairy-farm-record-system.appspot.com/o/Agora%20Logo%2F2F6-1YdaEP.jpeg?alt=media" alt="Logo" class="logo">
     <h1>Agora Chemical Volumes Dashboard</h1>
-    <div id="dashboard"></div>
+    <div class="dashboard-grid" id="dashboard"></div>
   </div>
 
   <button id="generate-btn" onclick="generatePDF()">Generate PDF</button>
