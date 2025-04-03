@@ -72,16 +72,20 @@
     .acid-liquid { background-color: green; }
     .chlor-liquid { background-color: blue; }
     .teat-liquid { background-color: red; }
-    .row-section {
+    .est-dates {
       display: flex;
-      justify-content: space-between;
-      padding: 2px 0;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 10px;
+    }
+    .est-date-block {
+      text-align: center;
       font-size: 0.8rem;
     }
-    .section-title {
-      margin-top: 10px;
-      font-size: 0.9rem;
-      font-weight: bold;
+    .est-date-block strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 0.85rem;
     }
     #generate-btn {
       display: block;
@@ -114,7 +118,7 @@
     <img id="agora-logo" src="https://firebasestorage.googleapis.com/v0/b/dairy-farm-record-system.appspot.com/o/Agora%20Logo%2F2F6-1YdaEP.jpeg?alt=media" alt="Logo" class="logo">
     <h1>Agora Chemical Volumes Dashboard</h1>
     <div class="dashboard-grid" id="dashboard"></div>
-    <div class="version">Version 1.4</div>
+    <div class="version">Version 1.5</div>
   </div>
 
   <button id="generate-btn" onclick="generatePDF()">Generate PDF</button>
@@ -196,10 +200,11 @@
             ${renderTank(data.volumes.chlor, data.max.chlor, 'chlor-liquid', 'Chlor')}
             ${renderTank(data.volumes.teat, data.max.teat, 'teat-liquid', 'Teat')}
           </div>
-          <div class="section-title">Estimated Top Up Date</div>
-          <div class="row-section"><div>Acid:</div><div>${estAcid}</div></div>
-          <div class="row-section"><div>Chlor Alkali:</div><div>${estChlor}</div></div>
-          <div class="row-section"><div>Teat Concentrate:</div><div>${estTeat}</div></div>
+          <div class="est-dates">
+            <div class="est-date-block"><strong>Acid</strong>${estAcid}</div>
+            <div class="est-date-block"><strong>Chlor Alkali</strong>${estChlor}</div>
+            <div class="est-date-block"><strong>Teat Concentrate</strong>${estTeat}</div>
+          </div>
         `;
         container.appendChild(section);
       }
@@ -207,7 +212,7 @@
 
     async function generatePDF() {
       const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF('l', 'pt', 'a4'); // landscape orientation
+      const pdf = new jsPDF('l', 'pt', 'a4');
       const container = document.getElementById("content-wrapper");
 
       const canvas = await html2canvas(container, {
