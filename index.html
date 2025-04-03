@@ -114,7 +114,7 @@
     <img id="agora-logo" src="https://firebasestorage.googleapis.com/v0/b/dairy-farm-record-system.appspot.com/o/Agora%20Logo%2F2F6-1YdaEP.jpeg?alt=media" alt="Logo" class="logo">
     <h1>Agora Chemical Volumes Dashboard</h1>
     <div class="dashboard-grid" id="dashboard"></div>
-    <div class="version">Version 1.3</div>
+    <div class="version">Version 1.4</div>
   </div>
 
   <button id="generate-btn" onclick="generatePDF()">Generate PDF</button>
@@ -207,11 +207,11 @@
 
     async function generatePDF() {
       const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF('p', 'pt', 'a4');
+      const pdf = new jsPDF('l', 'pt', 'a4'); // landscape orientation
       const container = document.getElementById("content-wrapper");
 
       const canvas = await html2canvas(container, {
-        scale: 2, // High resolution without resizing DOM
+        scale: 2,
         useCORS: true,
         scrollY: -window.scrollY,
         windowWidth: container.scrollWidth
@@ -220,8 +220,10 @@
       const imgData = canvas.toDataURL('image/png');
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
+      const imgRatio = canvas.width / canvas.height;
+      const finalHeight = pdfWidth / imgRatio;
 
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, finalHeight);
       pdf.save('chemical-volumes-dashboard.pdf');
     }
 
