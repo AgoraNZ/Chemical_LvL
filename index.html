@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chemical Volumes Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #d2d7dd;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+    h1, h2, h3 { text-align: center; }
+    .farm-section {
+      background-color: #fff;
+      margin: 20px auto;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      max-width: 800px;
+    }
+    .farm-section ul {
+      list-style: none;
+      padding: 0;
+    }
+    .farm-section li {
+      padding: 6px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Agora Chemical Volumes Dashboard</h1>
+
+  <div id="dashboard"></div>
+
+  <script>
+    const farms = {
+      "Brandmar Farm": {
+        volumes: { acid: 272.83, chlor: 200, teat: 280 },
+        usage: { acid: 0.45 * 17, chlor: 2 * 4, teat: 24 },
+      },
+      "J Block": {
+        volumes: { acid: 293.88, chlor: 121.04, teat: 650 },
+        usage: { acid: 0.75 * 17, chlor: 2.625 * 4, teat: 50 },
+      },
+      "Pukerimu": {
+        volumes: { acid: 272.83, chlor: 79.84, teat: 850 },
+        usage: { acid: 0.6 * 10, chlor: 2.1 * 4, teat: 50 },
+      },
+      "Ferry View": {
+        volumes: { acid: 480, chlor: 220, teat: 900 },
+        usage: { acid: 0.8 * 17, chlor: 2.8 * 4, teat: 100 },
+      },
+    };
+
+    function calculateTopUpDate(volume, usagePerWeek) {
+      const dailyUsage = usagePerWeek / 7;
+      const daysLeft = volume / dailyUsage;
+      const today = new Date();
+      today.setDate(today.getDate() + Math.floor(daysLeft));
+      return today.toLocaleDateString("en-NZ");
+    }
+
+    function renderDashboard() {
+      const container = document.getElementById("dashboard");
+      for (let farm in farms) {
+        const data = farms[farm];
+        const estAcid = calculateTopUpDate(data.volumes.acid, data.usage.acid);
+        const estChlor = calculateTopUpDate(data.volumes.chlor, data.usage.chlor);
+        const estTeat = calculateTopUpDate(data.volumes.teat, data.usage.teat);
+
+        const section = document.createElement("div");
+        section.className = "farm-section";
+        section.innerHTML = `
+          <h2>${farm}</h2>
+          <h4>Current Volume:</h4>
+          <ul>
+            <li>Acid: ${data.volumes.acid.toFixed(2)} L</li>
+            <li>Chlor Alkali: ${data.volumes.chlor.toFixed(2)} L</li>
+            <li>Teat Concentrate: ${data.volumes.teat.toFixed(2)} L</li>
+          </ul>
+          <h4>Estimated Top Up Date:</h4>
+          <ul>
+            <li>Acid: ${estAcid}</li>
+            <li>Chlor Alkali: ${estChlor}</li>
+            <li>Teat Concentrate: ${estTeat}</li>
+          </ul>
+        `;
+        container.appendChild(section);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", renderDashboard);
+  </script>
+</body>
+</html>
